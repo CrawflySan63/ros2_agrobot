@@ -1,0 +1,22 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Colcon
+.colcon/
+
+# Virtual environments (if any)
+.venv/
