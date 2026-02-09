@@ -19,7 +19,7 @@ class RemoveServoServer(Node):
     def __init__(self):
         super().__init__('remove_servo_server') #name of node ros2 node list
 
-        self.srv = self.create_service(RemoveServo, 'remove_servo', self.handle) #name of service ros2 service list
+        self.srv = self.create_service(RemoveServo, 'remove_servo', self.handle_remove_servo) #name of service ros2 service list
 
         # --- Servo config ---
         self.gpio_pin = 18
@@ -46,7 +46,7 @@ class RemoveServoServer(Node):
 
         self.get_logger().info("RemoveServo service ready; servo initialized.")
 
-    def handle(self, request, response):
+    def handle_remove_servo(self, request, response):
         # Ignore request.request intentionally
         if not self._motion_lock.acquire(blocking=False):
             response.response = "BUSY: motion already in progress"
