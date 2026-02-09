@@ -15,8 +15,8 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='steff',
-    maintainer_email='steff@todo.todo',
-    description='TODO: Package description',
+    maintainer_email='san63@byu.edu',
+    description='Seed and Removal nodes',
     license='Apache-2.0',
     extras_require={
         'test': [
@@ -25,6 +25,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+		'remove = agrobot_actuation.remove:main', # executable name ran = python import path + function
         ],
     },
 )
