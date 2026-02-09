@@ -4,7 +4,9 @@ import threading
 import rclpy
 from rclpy.node import Node
 
-import pigpio
+from gpiozero import AngularServo
+from gpiozero.pins.lgpio import LGPIOFactory
+
 from agrobot_interfaces.srv import RemoveServo
 
 
@@ -28,13 +30,19 @@ class RemoveServoServer(Node):
         # --- Concurrency guard ---
         self._motion_lock = threading.Lock()
 
-        # --- pigpio connection ---
-        self.pi = pigpio.pi()
-        if not self.pi.connected:
-            raise RuntimeError("pigpio daemon not running (pigpiod).")
+        # --- gpiozero / lgpio setup ---
+        factory = LGPIOFactory()
+        self.servo = AngularServo(
+            self.gpio_pin,
+            min_angle=0,
+            max_angle=180,
+            min_pulse_width=0.0005,   # 0.5 ms
+            max_pulse_width=0.0025,   # 2.5 ms
+            pin_factory=factory
+        )
 
-        # Stop any previous pulses
-        self.pi.set_servo_pulsewidth(self.gpio_pin, 0)
+        # Optional: start detached (not driving)
+        self.servo.detach()
 
         self.get_logger().info("RemoveServo service ready; servo initialized.")
 
@@ -48,17 +56,15 @@ class RemoveServoServer(Node):
             self.get_logger().info("Service called: executing fixed servo motion")
 
             # Move to angle A
-            pulse_a = angle_to_pulse_us(self.angle_a)
-            self.pi.set_servo_pulsewidth(self.gpio_pin, pulse_a)
+            self.servo.angle = float(self.angle_a)
             time.sleep(self.hold_s)
 
             # Move to angle B
-            pulse_b = angle_to_pulse_us(self.angle_b)
-            self.pi.set_servo_pulsewidth(self.gpio_pin, pulse_b)
+            self.servo.angle = float(self.angle_b)
             time.sleep(self.hold_s)
 
             # Optional: stop sending pulses (depends on whether you want it to hold)
-            self.pi.set_servo_pulsewidth(self.gpio_pin, 0)
+            self.servo.detach()
 
             response.response = f"OK: moved {self.angle_a}° then {self.angle_b}°"
             return response
@@ -72,8 +78,7 @@ class RemoveServoServer(Node):
 
     def destroy_node(self):
         try:
-            self.pi.set_servo_pulsewidth(self.gpio_pin, 0)
-            self.pi.stop()
+            self.servo.detach()
         except Exception:
             pass
         super().destroy_node()
