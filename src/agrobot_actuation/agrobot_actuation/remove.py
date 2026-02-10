@@ -7,7 +7,7 @@ from rclpy.node import Node
 from gpiozero import AngularServo
 from gpiozero.pins.lgpio import LGPIOFactory
 
-from agrobot_interfaces.srv import RemoveServo
+from agrobot_interfaces.srv import MoveServo
 
 
 def angle_to_pulse_us(angle_deg: float) -> int:
@@ -19,7 +19,7 @@ class RemoveServoServer(Node):
     def __init__(self):
         super().__init__('remove_servo_server') #name of node ros2 node list
 
-        self.srv = self.create_service(RemoveServo, 'remove_servo', self.handle_remove_servo) #name of service ros2 service list
+        self.srv = self.create_service(MoveServo, 'remove_servo', self.handle_remove_servo) #name of service ros2 service list
 
         # --- Servo config ---
         self.gpio_pin = 18
