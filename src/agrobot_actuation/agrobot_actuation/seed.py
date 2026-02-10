@@ -85,7 +85,7 @@ class SeedServoServer(Node):
 
 def main():
     rclpy.init()
-    node = RemoveServoServer()
+    node = SeedServoServer()
     try:
         rclpy.spin(node)
     finally:

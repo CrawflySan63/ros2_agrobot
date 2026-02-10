@@ -23,9 +23,9 @@ class RemoveServoServer(Node):
 
         # --- Servo config ---
         self.gpio_pin = 18
-        self.angle_a = 67
-        self.angle_b = 113
-        self.hold_s = 0.5  # how long to hold each position
+        self.angle_a = 0  # 67
+        self.angle_b = 180  #113
+        self.hold_s = 1  # how long to hold each position
 
         # --- Concurrency guard ---
         self._motion_lock = threading.Lock()
