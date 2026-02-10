@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
 		'remove = agrobot_actuation.remove:main', # executable name ran = python import path + function
+		'seed = agrobot_actuation.seed:main',
         ],
     },
 )
