@@ -24,7 +24,7 @@ class RemoveServoServer(Node):
         # --- Servo config ---
         self.gpio_pin = 18
         self.angle_a = 0  # 67
-        self.angle_b = 180  #113
+        self.angle_b = 45  #113
         self.hold_s = 1  # how long to hold each position
 
         # --- Concurrency guard ---
